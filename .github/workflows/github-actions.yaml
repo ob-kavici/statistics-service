@@ -72,6 +72,6 @@ jobs:
             exit 1
           fi
 
-          helm upgrade --install stats-service ./charts/stats-service \
+          helm upgrade --install stats-service ./charts \
             --values $VALUES_FILE \
             --set image.tag=$TAG
