@@ -15,7 +15,8 @@ async def consume_events():
 
 async def process_event(event_data: dict):
     print("Processing event:", event_data)
-    # supabase = await get_supabase_client()
+    supabase = await get_supabase_client()
+    await supabase.table("stats").insert({"stat": 123}).execute()
     # Store raw event
     # await supabase.execute("INSERT INTO events (data) VALUES ($1)", json.dumps(event_data))
     # Update stats
