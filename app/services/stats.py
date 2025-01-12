@@ -3,6 +3,10 @@ import aio_pika
 import asyncio
 from core.dependencies import *
 
+def query_supabase(table: str, auth: dict = None):
+    supabase = get_supabase_client(auth)
+    return supabase.table(table)
+
 async def consume_events():
     connection = await aio_pika.connect_robust(get_rabbitmq_url())
     async with connection:
@@ -15,8 +19,17 @@ async def consume_events():
 
 async def process_event(event_data: dict):
     print("Processing event:", event_data)
-    supabase = await get_supabase_client()
-    await supabase.table("stats").insert({"stat": 123}).execute()
+
+    try:
+        response = (
+            query_supabase("stats")
+            .insert({"stat": 123})
+            .execute()
+        )
+        print(response)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
     # Store raw event
     # await supabase.execute("INSERT INTO events (data) VALUES ($1)", json.dumps(event_data))
     # Update stats

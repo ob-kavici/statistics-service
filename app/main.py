@@ -18,6 +18,7 @@ games_processed = Counter("games_processed_total", "Total games processed")
 async def lifespan(app: FastAPI):
     # Start the RabbitMQ consumer as a background task
     consume_task = asyncio.create_task(consume_events())
+    print("Started consume task")
     try:
         yield
     finally:
