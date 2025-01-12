@@ -1,6 +1,6 @@
 apiVersion: v2
-name: games-service
-description: A Helm chart for deploying the games-service microservice
+name: stats-service
+description: A Helm chart for deploying the stats-service microservice
 
 # A chart can be either an 'application' or a 'library' chart.
 #

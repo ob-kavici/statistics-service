@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: kofolmarko/games-service
+  repository: kofolmarko/stats-service
   tag: latest
   pullPolicy: IfNotPresent
 
