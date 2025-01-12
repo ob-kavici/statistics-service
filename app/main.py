@@ -5,13 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.dependencies import get_supabase_client
 from models.errors import *
 from core.dependencies import *
-from prometheus_client import generate_latest, Counter
+from prometheus_client import Histogram, generate_latest, Counter
 from contextlib import asynccontextmanager
 from services.stats import consume_events
 import asyncio
-
-# Prometheus Metrics
-games_processed = Counter("games_processed_total", "Total games processed")
 
 # Lifespan manager
 @asynccontextmanager
@@ -46,7 +43,20 @@ app.add_middleware(
 app.include_router(router, prefix="/stats", tags=["stats"])
 app.router.lifespan_context = lifespan
 
+# Metrics
+request_count = Counter('http_requests_total', 'Total HTTP requests for stats-service')
+response_time = Histogram('http_request_duration_seconds', 'Response time in seconds for stats-service')
 
+@app.middleware("http")
+async def metrics_middleware(request, call_next):
+    request_count.inc()
+    with response_time.time():
+        response = await call_next(request)
+    return response
+
+@app.get("/metrics")
+def metrics():
+    return generate_latest()
 
 @app.get("/", responses={200: {"model": dict}})
 async def read_root():
@@ -62,7 +72,3 @@ async def liveness():
 })
 async def readiness():
     return {"status": "ready"}
-
-@app.get("/metrics")
-async def metrics():
-    return generate_latest()
