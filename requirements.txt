@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+supabase
+pytest
+aio-pika
+asyncpg
+prometheus-client

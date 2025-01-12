@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: kofolmarko/stats-service
+  tag: latest
+  pullPolicy: Always  # Ensures the latest image is always pulled in development.
+
+service:
+  type: ClusterIP
+  port: 8002
+  targetPort: 8002
+
+ingress:
+  enabled: true
+  host: dev-api.ob-kavici.si  # Use a different host for the dev environment.
+  path: /stats
+
+env:
+  secrets:
+    name: stats-service-secrets-dev  # Use a separate secret for the dev environment, if needed.
+
+probes:
+  liveness:
+    path: /health/liveness
+    port: 8002
+    initialDelaySeconds: 3
+    periodSeconds: 120
+  readiness:
+    path: /health/readiness
+    port: 8002
+    initialDelaySeconds: 5
+    periodSeconds: 3600
