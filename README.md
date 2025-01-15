@@ -78,6 +78,13 @@ The service will be accessible at [http://127.0.0.1:8002](http://127.0.0.1:8002)
 
 ---
 
+To enable stats collection and logging, also run a local instance of RabbitMQ broker:
+```bash
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4.0-management
+```
+
+---
+
 ## Contributing
 
 Contributions are welcome! To contribute:
